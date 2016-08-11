@@ -37,6 +37,52 @@ int main()
 		cout << var << ends;
 	}
 	cout << endl;
+	//copy 算法 参数三个迭代器，起始迭代器，终止迭代器， 目标容器起始迭代器。返回值为目的位置递增后的值。
+	int a1[] = {1,2,3,4,5,6,7,8,9};
+	int a2[sizeof(a1) / sizeof(*a1)];
+	auto ret = copy(begin(a1), end(a1), a2);//指向end(a2)
+	cout << "a2的值为：" << flush;
+	for each (auto var in a2)
+	{
+		cout << var << ends;
+	}
+	cout << endl;
+	cout << (ret == end(a2) ? "ret返回目的位置递增后的迭代器" : "ret未返回目的位置递增后的迭代器" )<< endl;
+	//replace 将序列中所有等于定值的元素替换为另一个值，改变原有序列
+	//replac_copy将序列中所有等于定值的元素替换为另一个值，原序列不变，返回一个新序列。
+	//replace参数为4个，起始位置迭代器，终止位置迭代器，定值元素，要替换的定值元素
+	//replac_copy参数5个，起始位置，终止位置，目标序列插入迭代器，定值元素，要替换的元素
+	vector<int> v5 = { 1,2,3,4,5};
+	vector<int> v6;
+    replace(v5.begin(), v5.end(),1,42);
+	replace_copy(v5.begin(), v5.end(),back_inserter(v6),42,25);
+	cout << "v5的值为：" << endl;
+	for each (auto var in v5)
+	{
+		cout << var << ends;
+	}
+	cout << endl;
+	cout << "v6的值为" << endl;
+	for each (auto var in v6)
+	{
+		cout << var << ends;
+	}
+	cout << endl;
+	//sort算法 需要 < 运算符重载 参数2：起始位置迭代器，终止位置迭代器
+	vector<string> ss1 = {"fox","over","jumps","over","quick","jumps","red","slow","red","the","turtle "};
+	//先排序以查找重复单词
+	sort(ss1.begin(), ss1.end());
+	//unique去除相邻重复元素,指向不重复区域之后一个位置的迭代器
+	//unique标准算法库并不直接删除元素而是“擦除“，不会使迭代器失效。返回迭代器其后元素值依然存在，值未知。
+	auto end_unique = unique(ss1.begin(), ss1.end());
+	//删除重复单词（为了真正删除元素，必须使用容器操作）
+	ss1.erase(end_unique,ss1.end());
+	cout << "排序去重后的ss1值为：" << flush;
+	for each (auto var in ss1)
+	{
+		cout << var << ends;//std::string <<运算符重载定义在sstream头文件中
+	}
+	cout << endl;
 	system("pause");
     return 0;
 }
