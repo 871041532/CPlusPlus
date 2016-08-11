@@ -3,17 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25123.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "4.11 类型转换", "4.11 类型转换\4.11 类型转换.vcxproj", "{0603ABF9-5C1A-42FB-8079-B60B05DAAF41}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "04.11 类型转换", "4.11 类型转换\4.11 类型转换.vcxproj", "{0603ABF9-5C1A-42FB-8079-B60B05DAAF41}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "8.1 IO类", "8.1 IO类\8.1 IO类.vcxproj", "{4C2DF50C-B284-4125-B8EA-483C1351B31F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08.1 IO类", "8.1 IO类\8.1 IO类.vcxproj", "{4C2DF50C-B284-4125-B8EA-483C1351B31F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "8.2 文件输入输出", "8.2 文件输入输出\8.2 文件输入输出.vcxproj", "{654B325A-1021-490D-88CD-FA37D4CFC881}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08.2 文件输入输出", "8.2 文件输入输出\8.2 文件输入输出.vcxproj", "{654B325A-1021-490D-88CD-FA37D4CFC881}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "8.3 string流", "8.3 string流\8.3 string流.vcxproj", "{B762D717-31EB-4F11-9CD3-61E5F9B41688}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "08.3 string流", "8.3 string流\8.3 string流.vcxproj", "{B762D717-31EB-4F11-9CD3-61E5F9B41688}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "9.2 容器库概览", "9.2 容器库概览\9.2 容器库概览.vcxproj", "{4AF82F69-81F5-4D31-A837-80B9FAB65181}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09.2 容器库概览", "9.2 容器库概览\9.2 容器库概览.vcxproj", "{4AF82F69-81F5-4D31-A837-80B9FAB65181}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "9.3 顺序容器操作", "9.3 顺序容器操作\9.3 顺序容器操作.vcxproj", "{94E6656D-D7F3-4A0C-9757-8CB9AA771B69}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09.3 顺序容器操作", "9.3 顺序容器操作\9.3 顺序容器操作.vcxproj", "{94E6656D-D7F3-4A0C-9757-8CB9AA771B69}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10 泛型算法", "10 泛型算法\10 泛型算法.vcxproj", "{F8FF7E7A-F877-48C2-9841-3E89D5A74519}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -71,6 +73,14 @@ Global
 		{94E6656D-D7F3-4A0C-9757-8CB9AA771B69}.Release|x64.Build.0 = Release|x64
 		{94E6656D-D7F3-4A0C-9757-8CB9AA771B69}.Release|x86.ActiveCfg = Release|Win32
 		{94E6656D-D7F3-4A0C-9757-8CB9AA771B69}.Release|x86.Build.0 = Release|Win32
+		{F8FF7E7A-F877-48C2-9841-3E89D5A74519}.Debug|x64.ActiveCfg = Debug|x64
+		{F8FF7E7A-F877-48C2-9841-3E89D5A74519}.Debug|x64.Build.0 = Debug|x64
+		{F8FF7E7A-F877-48C2-9841-3E89D5A74519}.Debug|x86.ActiveCfg = Debug|Win32
+		{F8FF7E7A-F877-48C2-9841-3E89D5A74519}.Debug|x86.Build.0 = Debug|Win32
+		{F8FF7E7A-F877-48C2-9841-3E89D5A74519}.Release|x64.ActiveCfg = Release|x64
+		{F8FF7E7A-F877-48C2-9841-3E89D5A74519}.Release|x64.Build.0 = Release|x64
+		{F8FF7E7A-F877-48C2-9841-3E89D5A74519}.Release|x86.ActiveCfg = Release|Win32
+		{F8FF7E7A-F877-48C2-9841-3E89D5A74519}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
