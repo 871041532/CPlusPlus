@@ -200,13 +200,37 @@ void evalWords()
 	}
 	cout << endl;
 }
-
+//lambda表达式 lambda函数体只有单一return则自动推断返回值，若有单一返回值之外内容则返回void
+//find_if 查找第一个满足谓词函数的元素，返回指向它的迭代器，否则返回end
+//foreach泛型循环，对迭代器范围内所有元素调用函数
+//捕获列表只用于局部非static变量，lambda可以直接使用局部static变量和它在函数之外声明的名字。
+void GFind_if(const unsigned int& size=4)
+{
+	vector<string> v = { "fox","red","the","over","slow","jumps","red","quick","the","sturtle" };
+	//排序
+	sort(v.begin(), v.end());
+	//去重
+	auto i1=unique(v.begin(), v.end());
+	//找出
+	auto wc = find_if(v.begin(), i1, [size](const string& s) {return s.size() > size; });
+	//打印
+	cout << "words中长度大于" << size << "的单词有：" << endl;
+	for_each(wc, i1, [](const string&a) {cout << a << " "; });
+	cout << endl;
+}
+//lambda Practise
+void lambdaParctise(const int&i1,const int&i2)
+{
+	auto l1 = [](const int&a, const int&b) {return a + b; };
+	auto l2 = [i1,i2](const int&a) {return a + i1+i2; };
+	cout << l1(1, 2) << endl;
+	cout << l2(3) << endl;
+}
 int main()
 {
 	vector<int> v1 = {1,2,3,4,5};
 	vector<int> v2 = { 1,2,3,4,5,6 };
 	vector<double> v3 = {1.3,2.3,3.3,4.3,5.3};	
-	evalWords();
 	system("pause");
     return 0;
 }

@@ -15,7 +15,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09.2 容器库概览", "9.2
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "09.3 顺序容器操作", "9.3 顺序容器操作\9.3 顺序容器操作.vcxproj", "{94E6656D-D7F3-4A0C-9757-8CB9AA771B69}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10 泛型算法", "10 泛型算法\10 泛型算法.vcxproj", "{F8FF7E7A-F877-48C2-9841-3E89D5A74519}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10.1 泛型算法", "10 泛型算法\10 泛型算法.vcxproj", "{F8FF7E7A-F877-48C2-9841-3E89D5A74519}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "10.3 lambda与bind定制", "10.3 lambda与bind定制\10.3 lambda与bind定制.vcxproj", "{E712AB32-CDBC-429F-B8AB-2F28D8AA756A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,14 @@ Global
 		{F8FF7E7A-F877-48C2-9841-3E89D5A74519}.Release|x64.Build.0 = Release|x64
 		{F8FF7E7A-F877-48C2-9841-3E89D5A74519}.Release|x86.ActiveCfg = Release|Win32
 		{F8FF7E7A-F877-48C2-9841-3E89D5A74519}.Release|x86.Build.0 = Release|Win32
+		{E712AB32-CDBC-429F-B8AB-2F28D8AA756A}.Debug|x64.ActiveCfg = Debug|x64
+		{E712AB32-CDBC-429F-B8AB-2F28D8AA756A}.Debug|x64.Build.0 = Debug|x64
+		{E712AB32-CDBC-429F-B8AB-2F28D8AA756A}.Debug|x86.ActiveCfg = Debug|Win32
+		{E712AB32-CDBC-429F-B8AB-2F28D8AA756A}.Debug|x86.Build.0 = Debug|Win32
+		{E712AB32-CDBC-429F-B8AB-2F28D8AA756A}.Release|x64.ActiveCfg = Release|x64
+		{E712AB32-CDBC-429F-B8AB-2F28D8AA756A}.Release|x64.Build.0 = Release|x64
+		{E712AB32-CDBC-429F-B8AB-2F28D8AA756A}.Release|x86.ActiveCfg = Release|Win32
+		{E712AB32-CDBC-429F-B8AB-2F28D8AA756A}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

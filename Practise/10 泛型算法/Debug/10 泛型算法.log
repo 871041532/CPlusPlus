@@ -1,2 +1,4 @@
-﻿  10 泛型算法.cpp
-  10 泛型算法.vcxproj -> C:\Users\zhoukb\Desktop\C++\CPlusPlus\Practise\Debug\10 泛型算法.exe
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(392,5): warning MSB8028: The intermediate directory (Debug\) contains files shared from another project (10 泛型算法.vcxproj).  This can lead to incorrect clean and rebuild behavior.
+  stdafx.cpp
+  10 泛型算法.cpp
+  10 泛型算法.vcxproj -> C:\Users\zhoukb\Desktop\C++\CPlusPlus\Practise\Debug\10.1 泛型算法.exe
