@@ -1,4 +1,0 @@
-﻿  8.3 string流.cpp
-c:\users\zhoukb\desktop\c++\cplusplus\practise\8.3 string流\8.3 string流.cpp(79): warning C4101: 'v2': unreferenced local variable
-c:\users\zhoukb\desktop\c++\cplusplus\practise\8.3 string流\8.3 string流.cpp(116): warning C4267: 'initializing': conversion from 'size_t' to 'char', possible loss of data
-  8.3 string流.vcxproj -> C:\Users\zhoukb\Desktop\C++\CPlusPlus\Practise\Debug\8.3 string流.exe

@@ -1,4 +1,0 @@
-﻿  Encry.cpp
-c:\users\zhoukb\desktop\c++\cplusplus\practise\encry\encry.cpp(10): warning C4244: “=”: 从“std::streamoff”转换到“long”，可能丢失数据
-  Encry.vcxproj -> C:\Users\zhoukb\Desktop\C++\CPlusPlus\Practise\Debug\Encry.exe
-  Encry.vcxproj -> C:\Users\zhoukb\Desktop\C++\CPlusPlus\Practise\Debug\Encry.pdb (Full PDB)
