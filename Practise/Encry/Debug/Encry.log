@@ -1,0 +1,13 @@
+﻿  Encry.cpp
+c:\users\zhoukb\desktop\c++\cplusplus\practise\encry\aes.h(65): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\zhoukb\desktop\c++\cplusplus\practise\encry\aes.h(74): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\zhoukb\desktop\c++\cplusplus\practise\encry\aes.h(99): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\zhoukb\desktop\c++\cplusplus\practise\encry\aes.h(108): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\zhoukb\desktop\c++\cplusplus\practise\encry\aes.h(130): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\zhoukb\desktop\c++\cplusplus\practise\encry\aes.h(745): warning C4244: “初始化”: 从“std::streamoff”转换到“int”，可能丢失数据
+c:\users\zhoukb\desktop\c++\cplusplus\practise\encry\aes.h(750): warning C4244: “初始化”: 从“std::streamoff”转换到“int”，可能丢失数据
+c:\users\zhoukb\desktop\c++\cplusplus\practise\encry\aes.h(768): warning C4018: “<”: 有符号/无符号不匹配
+c:\users\zhoukb\desktop\c++\cplusplus\practise\encry\aes.h(795): warning C4244: “=”: 从“std::streamoff”转换到“long”，可能丢失数据
+c:\users\zhoukb\desktop\c++\cplusplus\practise\encry\aes.h(806): warning C4018: “<”: 有符号/无符号不匹配
+  Encry.vcxproj -> C:\Users\zhoukb\Desktop\C++\CPlusPlus\Practise\Debug\Encry.exe
+  Encry.vcxproj -> C:\Users\zhoukb\Desktop\C++\CPlusPlus\Practise\Debug\Encry.pdb (Full PDB)

@@ -8,106 +8,6 @@
 #include <io.h> 
 #include <direct.h>
 using namespace std;
-class AESHelper
-{
-public:
-	AESHelper();
-	~AESHelper();
-	static string GetProgramDir();//获得exe程序所在目录
-	static void GetAllFiles(string path, vector<string>& files,bool isAll=false);//获取所有的文件名（包含子目录）
-	static void GetAllFormatFiles(string path, vector<string>& files, string format,bool isAll = false);//获取特定格式文件名（包含子目录）
-private:
-
-};
-
-void AESHelper::GetAllFormatFiles(string path, vector<string>& files, string format, bool isAll) {
-	//文件句柄    
-	long   hFile = 0;
-	//文件信息    
-	struct _finddata_t fileinfo;
-	string p;
-	if ((hFile = _findfirst(p.assign(path).append("\\*" + format).c_str(), &fileinfo)) != -1)
-	{
-		do
-		{
-			if ((fileinfo.attrib &  _A_SUBDIR))
-			{
-				if (isAll)
-				{
-					if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)
-					{
-						files.push_back(p.assign(path).append("\\").append(fileinfo.name));
-						GetAllFormatFiles(p.assign(path).append("\\").append(fileinfo.name), files, format);
-					}
-				}
-			}
-			else
-			{
-				files.push_back(p.assign(fileinfo.name));  //将文件路径保存，也可以只保存文件名:    p.assign(path).append("\\").append(fileinfo.name)  
-			}
-		} while (_findnext(hFile, &fileinfo) == 0);
-		_findclose(hFile);
-	}
-}
-void AESHelper::GetAllFiles(string path, vector<string>& files, bool isAll) {
-	long   hFile = 0;
-	//文件信息    
-	struct _finddata_t fileinfo;//用来存储文件信息的结构体    
-	string p;
-	if ((hFile = _findfirst(p.assign(path).append("\\*").c_str(), &fileinfo)) != -1)  //第一次查找  
-	{
-		do
-		{
-			if ((fileinfo.attrib &  _A_SUBDIR))  //如果查找到的是文件夹  
-			{
-				if (isAll)
-				{
-					if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)  //进入文件夹查找  
-					{
-						files.push_back(p.assign(path).append("\\").append(fileinfo.name));
-						GetAllFiles(p.assign(path).append("\\").append(fileinfo.name), files);
-					}
-				}
-			}
-			else //如果查找到的不是是文件夹   
-			{
-				files.push_back(p.assign(fileinfo.name));  //将文件路径保存，也可以只保存文件名:    p.assign(path).append("\\").append(fileinfo.name)  
-			}
-
-		} while (_findnext(hFile, &fileinfo) == 0);
-
-		_findclose(hFile); //结束查找  
-	}
-}
-string AESHelper::GetProgramDir()
-{
-	char *buffer;
-	//得到当前的工作路径
-	if ((buffer = _getcwd(NULL, 0)) == NULL)
-		perror("_getcwderror");
-	else
-	{
-		//printf("%s\nLength:%d\n", buffer, strlen(buffer));
-		//free(buffer);
-	}
-	return buffer;
-}
-
-AESHelper::AESHelper()
-{
-}
-
-AESHelper::~AESHelper()
-{
-}
-
-
-
-
-
-
-
-
 
 class AES
 {
@@ -119,6 +19,11 @@ public:
 	void* Cipher(void* input, int length = 0);
 	void* InvCipher(void* input, int length);
 
+	void Cipher(char *input, char *output);
+	void InvCipher(char *inut, char *output);
+
+	unsigned char* CipherAll(unsigned char* input, int length);
+	unsigned char* InvCipherAll(unsigned char* input, int length);
 private:
 	unsigned char Sbox[256];
 	unsigned char InvSbox[256];
@@ -135,11 +40,106 @@ private:
 	void InvSubBytes(unsigned char state[][4]);
 	void InvShiftRows(unsigned char state[][4]);
 	void InvMixColumns(unsigned char state[][4]);
+
+	int strToHex(const char *ch, char *hex);
+	int hexToStr(const char *hex, char *ch);
+	int ascillToValue(const char ch);
+	char valueToHexCh(const int value);
+	int getUCharLen(const unsigned char *uch);
+	int strToUChar(const char *ch, unsigned char *uch);
+	int ucharToStr(const unsigned char *uch, char *ch);
+	int ucharToHex(const unsigned char *uch, char *hex);
+	int hexToUChar(const char *hex, unsigned char *uch);
 };
+//加密整块数据
+unsigned char* AES::CipherAll(unsigned char* input, int length)
+{
+	if (length >= 16)
+	{
+		int block = length / 16;
+		if (block>100)
+		{
+			block = 100;
+		}
+		vector<unsigned char*> vector;
+		for (size_t i = 0; i < block; i++)
+		{
+			unsigned char* temp = new unsigned char[16];
+			for (size_t j = 0; j < 16; j++)
+			{
+				temp[j] = input[j + i * 16];
+			}
+			vector.push_back(Cipher(temp));
+		}
+		for (size_t i = 0; i<block; i++)
+		{
+			for (size_t j = 0; j < 16; j++)
+			{
+				input[j + i * 16] = vector[i][j];
+			}
+		}
+		for each (unsigned char* var in vector)
+		{
+			delete[] var;
+		}
+	}
+	return input;
+}
+//解密整块数据
+unsigned char* AES::InvCipherAll(unsigned char* input, int length)
+{
+	if (length >= 16)
+	{
+		int block = length / 16;
+		if (block>100)
+		{
+			block = 100;
+		}
+		vector<unsigned char*> vector;
+		for (size_t i = 0; i < block; i++)
+		{
+			unsigned char* temp = new unsigned char[16];
+			for (size_t j = 0; j < 16; j++)
+			{
+				temp[j] = input[j + i * 16];
+			}
+			vector.push_back(InvCipher(temp));
+		}
+		for (size_t i = 0; i<block; i++)
+		{
+			for (size_t j = 0; j < 16; j++)
+			{
+				input[j + i * 16] = vector[i][j];
+			}
+		}
+		for each (unsigned char* var in vector)
+		{
+			delete[] var;
+		}
+	}
+	return input;
+}
 AES::AES(unsigned char* key)
 {
+	int len = strlen((char*)key);
+	unsigned char temp[16];
+	if (len<16)
+	{
+		for (size_t i = 0; i < 16; i++)
+		{
+			if (i<len)
+			{
+				temp[i] = key[i];
+			}
+			else
+			{
+				temp[i] = '@';
+			}
+		}
+		key = temp;
+	}
 	unsigned char sBox[] =
-	{ /*  0    1    2    3    4    5    6    7    8    9    a    b    c    d    e    f */
+	{ /* 0 1 2 3 4 5 6 7 8 9 a b c d e f */
 		0x63,0x7c,0x77,0x7b,0xf2,0x6b,0x6f,0xc5,0x30,0x01,0x67,0x2b,0xfe,0xd7,0xab,0x76, /*0*/
 		0xca,0x82,0xc9,0x7d,0xfa,0x59,0x47,0xf0,0xad,0xd4,0xa2,0xaf,0x9c,0xa4,0x72,0xc0, /*1*/
 		0xb7,0xfd,0x93,0x26,0x36,0x3f,0xf7,0xcc,0x34,0xa5,0xe5,0xf1,0x71,0xd8,0x31,0x15, /*2*/
@@ -155,10 +155,10 @@ AES::AES(unsigned char* key)
 		0xba,0x78,0x25,0x2e,0x1c,0xa6,0xb4,0xc6,0xe8,0xdd,0x74,0x1f,0x4b,0xbd,0x8b,0x8a, /*c*/
 		0x70,0x3e,0xb5,0x66,0x48,0x03,0xf6,0x0e,0x61,0x35,0x57,0xb9,0x86,0xc1,0x1d,0x9e, /*d*/
 		0xe1,0xf8,0x98,0x11,0x69,0xd9,0x8e,0x94,0x9b,0x1e,0x87,0xe9,0xce,0x55,0x28,0xdf, /*e*/
-		0x8c,0xa1,0x89,0x0d,0xbf,0xe6,0x42,0x68,0x41,0x99,0x2d,0x0f,0xb0,0x54,0xbb,0x16  /*f*/
+		0x8c,0xa1,0x89,0x0d,0xbf,0xe6,0x42,0x68,0x41,0x99,0x2d,0x0f,0xb0,0x54,0xbb,0x16 /*f*/
 	};
 	unsigned char invsBox[256] =
-	{ /*  0    1    2    3    4    5    6    7    8    9    a    b    c    d    e    f  */
+	{ /* 0 1 2 3 4 5 6 7 8 9 a b c d e f */
 		0x52,0x09,0x6a,0xd5,0x30,0x36,0xa5,0x38,0xbf,0x40,0xa3,0x9e,0x81,0xf3,0xd7,0xfb, /*0*/
 		0x7c,0xe3,0x39,0x82,0x9b,0x2f,0xff,0x87,0x34,0x8e,0x43,0x44,0xc4,0xde,0xe9,0xcb, /*1*/
 		0x54,0x7b,0x94,0x32,0xa6,0xc2,0x23,0x3d,0xee,0x4c,0x95,0x0b,0x42,0xfa,0xc3,0x4e, /*2*/
@@ -174,7 +174,7 @@ AES::AES(unsigned char* key)
 		0x1f,0xdd,0xa8,0x33,0x88,0x07,0xc7,0x31,0xb1,0x12,0x10,0x59,0x27,0x80,0xec,0x5f, /*c*/
 		0x60,0x51,0x7f,0xa9,0x19,0xb5,0x4a,0x0d,0x2d,0xe5,0x7a,0x9f,0x93,0xc9,0x9c,0xef, /*d*/
 		0xa0,0xe0,0x3b,0x4d,0xae,0x2a,0xf5,0xb0,0xc8,0xeb,0xbb,0x3c,0x83,0x53,0x99,0x61, /*e*/
-		0x17,0x2b,0x04,0x7e,0xba,0x77,0xd6,0x26,0xe1,0x69,0x14,0x63,0x55,0x21,0x0c,0x7d  /*f*/
+		0x17,0x2b,0x04,0x7e,0xba,0x77,0xd6,0x26,0xe1,0x69,0x14,0x63,0x55,0x21,0x0c,0x7d /*f*/
 	};
 	memcpy(Sbox, sBox, 256);
 	memcpy(InvSbox, invsBox, 256);
@@ -184,6 +184,22 @@ AES::AES(unsigned char* key)
 AES::~AES()
 {
 
+}
+
+void AES::Cipher(char *input, char *output)
+{
+	unsigned char uch_input[1024];
+	strToUChar(input, uch_input);
+	Cipher(uch_input);
+	ucharToHex(uch_input, output);
+}
+
+void AES::InvCipher(char *input, char *output)
+{
+	unsigned char uch_input[1024];
+	hexToUChar(input, uch_input);
+	InvCipher(uch_input);
+	ucharToStr(uch_input, output);
 }
 
 unsigned char* AES::Cipher(unsigned char* input)
@@ -453,4 +469,447 @@ void AES::InvMixColumns(unsigned char state[][4])
 				^ FFmul(0x09, t[(r + 3) % 4]);
 		}
 	}
+}
+
+int AES::getUCharLen(const unsigned char *uch)
+{
+	int len = 0;
+	while (*uch++)
+		++len;
+
+	return len;
+}
+
+int AES::ucharToHex(const unsigned char *uch, char *hex)
+{
+	int high, low;
+	int tmp = 0;
+	if (uch == NULL || hex == NULL) {
+		return -1;
+	}
+
+	if (getUCharLen(uch) == 0) {
+		return -2;
+	}
+
+	while (*uch) {
+		tmp = (int)*uch;
+		high = tmp >> 4;
+		low = tmp & 15;
+		*hex++ = valueToHexCh(high); //先写高字节
+		*hex++ = valueToHexCh(low); //其次写低字节
+		uch++;
+	}
+	*hex = '\0';
+	return 0;
+}
+
+int AES::hexToUChar(const char *hex, unsigned char *uch)
+{
+	int high, low;
+	int tmp = 0;
+	if (hex == NULL || uch == NULL) {
+		return -1;
+	}
+
+	if (strlen(hex) % 2 == 1) {
+		return -2;
+	}
+
+	while (*hex) {
+		high = ascillToValue(*hex);
+		if (high < 0) {
+			*uch = '\0';
+			return -3;
+		}
+		hex++; //指针移动到下一个字符上
+		low = ascillToValue(*hex);
+		if (low < 0) {
+			*uch = '\0';
+			return -3;
+		}
+		tmp = (high << 4) + low;
+		*uch++ = tmp;
+		hex++;
+	}
+	*uch = (int)'\0';
+	return 0;
+}
+
+int AES::strToUChar(const char *ch, unsigned char *uch)
+{
+	int tmp = 0;
+	if (ch == NULL || uch == NULL)
+		return -1;
+	if (strlen(ch) == 0)
+		return -2;
+
+	while (*ch) {
+		tmp = (int)*ch;
+		*uch++ = tmp;
+		ch++;
+	}
+	*uch = (int)'\0';
+	return 0;
+}
+
+int AES::ucharToStr(const unsigned char *uch, char *ch)
+{
+	int tmp = 0;
+	if (uch == NULL || ch == NULL)
+		return -1;
+
+	while (*uch) {
+		tmp = (int)*uch;
+		*ch++ = (char)tmp;
+		uch++;
+	}
+	*ch = '\0';
+
+	return 0;
+}
+
+int AES::strToHex(const char *ch, char *hex)
+{
+	int high, low;
+	int tmp = 0;
+	if (ch == NULL || hex == NULL) {
+		return -1;
+	}
+
+	if (strlen(ch) == 0) {
+		return -2;
+	}
+
+	while (*ch) {
+		tmp = (int)*ch;
+		high = tmp >> 4;
+		low = tmp & 15;
+		*hex++ = valueToHexCh(high); //先写高字节
+		*hex++ = valueToHexCh(low); //其次写低字节
+		ch++;
+	}
+	*hex = '\0';
+	return 0;
+}
+
+int AES::hexToStr(const char *hex, char *ch)
+{
+	int high, low;
+	int tmp = 0;
+	if (hex == NULL || ch == NULL) {
+		return -1;
+	}
+
+	if (strlen(hex) % 2 == 1) {
+		return -2;
+	}
+
+	while (*hex) {
+		high = ascillToValue(*hex);
+		if (high < 0) {
+			*ch = '\0';
+			return -3;
+		}
+		hex++; //指针移动到下一个字符上
+		low = ascillToValue(*hex);
+		if (low < 0) {
+			*ch = '\0';
+			return -3;
+		}
+		tmp = (high << 4) + low;
+		*ch++ = (char)tmp;
+		hex++;
+	}
+	*ch = '\0';
+	return 0;
+}
+
+int AES::ascillToValue(const char ch) {
+	int result = 0;
+	//获取16进制的高字节位数据
+	if (ch >= '0' && ch <= '9') {
+		result = (int)(ch - '0');
+	}
+	else if (ch >= 'a' && ch <= 'z') {
+		result = (int)(ch - 'a') + 10;
+	}
+	else if (ch >= 'A' && ch <= 'Z') {
+		result = (int)(ch - 'A') + 10;
+	}
+	else {
+		result = -1;
+	}
+	return result;
+}
+
+char AES::valueToHexCh(const int value)
+{
+	char result = '\0';
+	if (value >= 0 && value <= 9) {
+		result = (char)(value + 48); //48为ascii编码的‘0’字符编码值
+	}
+	else if (value >= 10 && value <= 15) {
+		result = (char)(value - 10 + 65); //减去10则找出其在16进制的偏移量，65为ascii的'A'的字符编码值
+	}
+	else {
+		;
+	}
+
+	return result;
+}
+
+
+
+
+
+
+
+
+class AESHelper
+{
+public:
+	AESHelper();
+	~AESHelper();
+	static string GetProgramDir();//获得exe程序所在目录
+	static void EncryCurrentDir(string key);
+	static bool DecryCurrentDir(string key);
+	static void GetAllFiles(string path, vector<string>& files, bool isAll = false);//获取所有的文件名（包含子目录）
+	static void GetAllFormatFiles(string path, vector<string>& files, string format, bool isAll = false);//获取特定格式文件名（包含子目录）
+	static void AESEncryptFile(string filePath, string _key);//加密某文件
+	static bool AESDecryptFile(string filePath, string _key);//解密某文件
+	static void AESEncryptDirFiles(string dirPath, string _key, bool isChildDir = false);//加密文件夹下文件
+	static bool AESDEcryptDirFiles(string dirPath, string _key, bool isChildDir = false);//解密文件夹下文件
+private:
+};
+//加密当前路径
+void AESHelper::EncryCurrentDir(string key)
+{
+	string path = GetProgramDir();
+	cout << path << endl;
+	AESEncryptDirFiles(path, key, false);
+}
+//解密当前路径
+bool AESHelper::DecryCurrentDir(string key)
+{
+	string path = GetProgramDir();
+	bool isRight = AESDEcryptDirFiles(path, key, false);
+	return isRight;
+}
+
+
+//加密某文件夹中所有文件
+void AESHelper::AESEncryptDirFiles(string dirPath, string _key, bool isChildDir)
+{
+	//获得文件夹中所有文件
+	vector<string> files;
+	GetAllFiles(dirPath,files,isChildDir);
+	for each (string var in files)
+	{
+		int a = var.find(".zkb");
+		int b = var.find("金梅君御用加解密.exe");
+		if (a<0 && b<0)
+		{
+			//cout << dirPath + "\\" + var << endl;
+			AESEncryptFile(dirPath+"\\"+var,_key);
+		}
+	}
+}
+//解密某文件夹 中所有文件
+bool AESHelper::AESDEcryptDirFiles(string dirPath, string _key, bool isChildDir)
+{
+	//获得文件夹中所有文件
+	vector<string> files;
+	GetAllFiles(dirPath, files, isChildDir);
+	for each (string var in files)
+	{
+		int a = var.find(".zkb");
+		if (a>0)
+		{
+			//cout << dirPath + "\\" + var << endl;
+			bool isRight=AESDecryptFile(dirPath + "\\" + var, _key);
+			if (!isRight) { return false; }
+		}
+	}
+	return true;
+}
+
+//解密某文件
+bool AESHelper::AESDecryptFile(string filePath, string _key)
+{
+	//从新文件中再次读取流
+	int typeLength2;
+	char* type2;
+	unsigned char* binaryData;
+	ifstream readStream2(filePath, ios::binary | ios::out | ios::ate);
+	int theLength = readStream2.tellg();//获得流长度
+	readStream2.seekg(0, ios::beg);//复位
+	readStream2 >> typeLength2;
+	type2 = new char[typeLength2];
+	readStream2.read((char*)type2, typeLength2);
+	int position = readStream2.tellg();
+	binaryData = new unsigned char[theLength - position];
+	readStream2.read((char*)binaryData, theLength - position);
+	readStream2.close();
+
+	//解密
+	AES aes((unsigned char*)const_cast<char*>(_key.c_str()));
+	binaryData = aes.InvCipherAll(binaryData, theLength - position);
+
+	//获取标志位
+	char charTemp = binaryData[0];
+	if (charTemp != '&')
+	{
+		delete[] type2;
+		delete[] binaryData;
+		return false;
+	}
+	unsigned char* newBinaryData = new unsigned char[theLength - position - 1];
+	for (size_t i = 0; i < theLength - position - 1; i++)
+	{
+		newBinaryData[i] = binaryData[i + 1];
+	}
+
+	//将新文件流再次写入下个新文件
+	int dotIndex = filePath.rfind(".");
+	string type = string((char*)type2, typeLength2);
+	ofstream writeStream2(filePath.substr(0, dotIndex) + "." + type, ios::binary | ios::ate | ios::out);
+	writeStream2.write((char*)newBinaryData, theLength - position - 1);
+	writeStream2.close();
+
+	delete[] type2;
+	delete[] binaryData;
+	delete[] newBinaryData;
+	remove(filePath.c_str());
+	return true;
+}
+
+//加密某文件
+void AESHelper::AESEncryptFile(string filePath, string _key)
+{
+	//从文件读取流
+	unsigned char* key = (unsigned char*)const_cast<char*>(_key.c_str());
+	unsigned char* buffer;
+	long size;
+	ifstream readStream(filePath, ios::binary | ios::out | ios::ate);
+	size = readStream.tellg();
+	readStream.seekg(0, ios::beg);
+	buffer = new unsigned char[size];
+	readStream.read((char*)buffer, size);
+	readStream.close();
+	int dotIndex = filePath.rfind(".");
+	string type = filePath.substr(dotIndex + 1);
+	string totalPath = filePath.substr(0, dotIndex) + ".zkb";
+
+	//加入标志位
+	unsigned char* newBuffer = new unsigned char[size + 1];
+	for (size_t i = 0; i < size + 1; i++)
+	{
+		if (i == 0)
+		{
+			newBuffer[i] = '&';
+		}
+		else
+		{
+			newBuffer[i] = buffer[i - 1];
+		}
+	}
+
+	//加密
+	AES aes((unsigned char*)const_cast<char*>(_key.c_str()));
+	newBuffer = aes.CipherAll(newBuffer, size + 1);
+
+	//将文件流写入新文件
+	int typeLength = type.length();
+	totalPath.c_str();
+	ofstream writeStream(totalPath, ios::binary | ios::ate | ios::out);
+	writeStream << typeLength;
+	writeStream.write((char*)type.c_str(), typeLength);
+	writeStream.write((char*)newBuffer, size + 1);
+	writeStream.close();
+
+	delete[] buffer;
+	delete[] newBuffer;
+	remove(filePath.c_str());
+}
+
+void AESHelper::GetAllFormatFiles(string path, vector<string>& files, string format, bool isAll) {
+	//文件句柄    
+	long   hFile = 0;
+	//文件信息    
+	struct _finddata_t fileinfo;
+	string p;
+	if ((hFile = _findfirst(p.assign(path).append("\\*" + format).c_str(), &fileinfo)) != -1)
+	{
+		do
+		{
+			if ((fileinfo.attrib &  _A_SUBDIR))
+			{
+				if (isAll)
+				{
+					if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)
+					{
+						files.push_back(p.assign(path).append("\\").append(fileinfo.name));
+						GetAllFormatFiles(p.assign(path).append("\\").append(fileinfo.name), files, format);
+					}
+				}
+			}
+			else
+			{
+				files.push_back(p.assign(fileinfo.name));  //将文件路径保存，也可以只保存文件名:    p.assign(path).append("\\").append(fileinfo.name)  
+			}
+		} while (_findnext(hFile, &fileinfo) == 0);
+		_findclose(hFile);
+	}
+}
+void AESHelper::GetAllFiles(string path, vector<string>& files, bool isAll) {
+	long   hFile = 0;
+	//文件信息    
+	struct _finddata_t fileinfo;//用来存储文件信息的结构体    
+	string p;
+	if ((hFile = _findfirst(p.assign(path).append("\\*").c_str(), &fileinfo)) != -1)  //第一次查找  
+	{
+		do
+		{
+			if ((fileinfo.attrib &  _A_SUBDIR))  //如果查找到的是文件夹  
+			{
+				if (isAll)
+				{
+					if (strcmp(fileinfo.name, ".") != 0 && strcmp(fileinfo.name, "..") != 0)  //进入文件夹查找  
+					{
+						files.push_back(p.assign(path).append("\\").append(fileinfo.name));
+						GetAllFiles(p.assign(path).append("\\").append(fileinfo.name), files);
+					}
+				}
+			}
+			else //如果查找到的不是是文件夹   
+			{
+				files.push_back(p.assign(fileinfo.name));  //将文件路径保存，也可以只保存文件名:    p.assign(path).append("\\").append(fileinfo.name)  
+			}
+
+		} while (_findnext(hFile, &fileinfo) == 0);
+
+		_findclose(hFile); //结束查找  
+	}
+}
+string AESHelper::GetProgramDir()
+{
+	char *buffer;
+	//得到当前的工作路径
+	if ((buffer = _getcwd(NULL, 0)) == NULL)
+		perror("_getcwderror");
+	else
+	{
+		//printf("%s\nLength:%d\n", buffer, strlen(buffer));
+		//free(buffer);
+	}
+	return buffer;
+}
+
+AESHelper::AESHelper()
+{
+}
+
+AESHelper::~AESHelper()
+{
 }
