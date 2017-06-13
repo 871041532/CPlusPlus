@@ -1,0 +1,30 @@
+
+// testdll3.cpp : Defines the entry point for the DLL application.
+//
+
+#include "stdafx.h"
+
+BOOL APIENTRY DllMain( HANDLE hModule, 
+                       DWORD ul_reason_for_call, 
+                       LPVOID lpReserved
+      )
+{
+    return TRUE;
+}
+
+
+extern "C" __declspec(dllexport) int add(int * a,int * b)
+{
+return *a + *b;
+}
+
+
+Ｃ＃中的调用方法：
+
+[DllImport("testdll3.dll", EntryPoint = "add", CharSet = CharSet.Unicode)]
+        private extern static int cadd(out int a, out int b);
+
+int a = 1;
+int b = 2;
+int re = cadd(out a, out b);／／成功返回3
+
